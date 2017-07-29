@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Character : MonoBehaviour {
 
-    public int speed = 5;
     public int forceSlow = 7;
+    public float speed = 5.0f;
     public float energy = 100;
     public float bulletSpeed = 5000;
     public GameObject gun;
@@ -13,13 +13,15 @@ public class Character : MonoBehaviour {
 
     private Vector3 mousePos;
     private Vector3 objectPos;
+    private float defaultSpeed = 5.0f;
     private float angle;
     private GameObject bulletInstance;
 
 
+
 	// Use this for initialization
 	void Start ()
-    {       
+    {
 	}
 	
 	// Update is called once per frame
@@ -35,11 +37,9 @@ public class Character : MonoBehaviour {
 
     private void Shoot()
     {
-        mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
         bulletInstance = Instantiate(bullet);
         bulletInstance.transform.position = new Vector2(gun.transform.position.x, gun.transform.position.y);
-        bulletInstance.GetComponent<Rigidbody2D>().AddForce(mousePos * bulletSpeed);
-        Debug.Log(mousePos * bulletSpeed);
+        //bulletInstance.GetComponent<Rigidbody2D>().AddForce(mousePos * bulletSpeed);
     }
 
     private void Movement()
@@ -63,6 +63,15 @@ public class Character : MonoBehaviour {
         {
             //transform.Translate(new Vector2(1, 0) * (Time.deltaTime * speed));
             GetComponent<Rigidbody2D>().AddForce(-Vector2.left * speed / forceSlow);
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            speed = speed * 2;
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            speed = defaultSpeed;
         }
     }
 

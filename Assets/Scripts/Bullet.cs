@@ -6,15 +6,25 @@ public class Bullet : MonoBehaviour {
 
     public float bulletSpeed = 5;
 
-    private 
+    private Vector3 mousePos;
+    private Vector3 normalizeDirection;
 
-    // Use this for initialization
     void Start () {
-		
-	}
+        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePos.z = transform.position.z;
+        normalizeDirection = (mousePos - transform.position).normalized;
+        Invoke("DestroySelf", 5);
+    }
 	
-	// Update is called once per frame
-	void Update () {
-        //transform.position = Vector2.MoveTowards(transform.position, mousePos, Time.deltaTime * bulletSpeed);
+	void Update ()
+    {
+
+        //transform.position = Vector3.MoveTowards(transform.position, mousePos, bulletSpeed * Time.deltaTime);
+        transform.Translate(normalizeDirection * Time.deltaTime * bulletSpeed);
+    }
+
+    void DestroySelf()
+    {
+        Destroy(gameObject);
     }
 }
