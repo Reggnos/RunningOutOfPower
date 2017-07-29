@@ -31,7 +31,7 @@ public class Melee : MonoBehaviour {
     {
         if (meeleBox.enabled == false)
         {
-            Invoke("ActivateBox", 0.5f);
+            Invoke("ActivateBox", 0.25f);
             meeleBox.enabled = true;
             characterAnim.SetBool("Meleeing", true);
         }
