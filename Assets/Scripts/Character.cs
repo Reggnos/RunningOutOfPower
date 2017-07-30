@@ -22,6 +22,7 @@ public class Character : MonoBehaviour {
     private Vector3 mousePos;
     private Vector3 objectPos;
     private float defaultSpeed = 5.0f;
+    private float sprintSpeed = 10.0f;
     private float angle;
     private float energyCounter;
     private GameObject bulletInstance;
@@ -68,7 +69,7 @@ public class Character : MonoBehaviour {
     {
         if (energyCounter > energy)
         {
-            ambientRenderer.color -= new Color(0, 0, 0, 0.008f);
+            ambientRenderer.color -= new Color(0, 0, 0, 0.008f) * Mathf.Abs(energy - energyCounter);
             energyCounter = energy;
         }
         else if (energyCounter < energy)
@@ -120,9 +121,10 @@ public class Character : MonoBehaviour {
             GetComponent<Rigidbody2D>().AddForce(-Vector2.left * speed / forceSlow);
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift))
         {
-            speed = speed * 2;
+            energy -= 0.05f;
+            speed = sprintSpeed;
         }
         else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
@@ -145,6 +147,6 @@ public class Character : MonoBehaviour {
     private void PassiveEnergyLoss()
     {
         Invoke("PassiveEnergyLoss", 1);
-        energy--;
+        energy -= 0.5f;
     }
 }

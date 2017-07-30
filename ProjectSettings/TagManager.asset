@@ -7,6 +7,8 @@ TagManager:
   - Enemy
   - Meele
   - Healing Bar
+  - Door
+  - Charging Station
   layers:
   - Default
   - TransparentFX
