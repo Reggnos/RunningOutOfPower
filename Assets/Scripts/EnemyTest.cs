@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EnemyTest : MonoBehaviour
 {
-
     public int health = 2;
 
     void Update()
@@ -19,6 +18,57 @@ public class EnemyTest : MonoBehaviour
     {
         if (other.gameObject.tag == "Meele")
         {
+            {
+                if (Character.healingBar == 12)
+                {
+                    Character.energy += (Character.maxEnergy * 81) / 100;
+                }
+                else if (Character.healingBar == 11)
+                {
+                    Character.energy += (Character.maxEnergy * 69) / 100;
+                }
+                else if (Character.healingBar == 10)
+                {
+                    Character.energy += (Character.maxEnergy * 57) / 100;
+                }
+                else if (Character.healingBar == 9)
+                {
+                    Character.energy += (Character.maxEnergy * 47) / 100;
+                }
+                else if (Character.healingBar == 8)
+                {
+                    Character.energy += (Character.maxEnergy * 38) / 100;
+                }
+                else if (Character.healingBar == 7)
+                {
+                    Character.energy += (Character.maxEnergy * 31) / 100;
+                }
+                else if (Character.healingBar == 6)
+                {
+                    Character.energy += (Character.maxEnergy * 25) / 100;
+                }
+                else if (Character.healingBar == 5)
+                {
+                    Character.energy += (Character.maxEnergy * 20) / 100;
+                }
+                else if (Character.healingBar == 4)
+                {
+                    Character.energy += (Character.maxEnergy * 16) / 100;
+                }
+                else if (Character.healingBar == 3)
+                {
+                    Character.energy += (Character.maxEnergy * 12) / 100;
+                }
+                else if (Character.healingBar == 2)
+                {
+                    Character.energy += (Character.maxEnergy * 7) / 100;
+                }
+                else if (Character.healingBar == 1)
+                {
+                    Character.energy += (Character.maxEnergy * 3) / 100;
+                }
+            };
+            Character.healingBar = 0;
             health--;
         }
     }

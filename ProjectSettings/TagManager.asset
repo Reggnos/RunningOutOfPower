@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - Meele
+  - Healing Bar
   layers:
   - Default
   - TransparentFX

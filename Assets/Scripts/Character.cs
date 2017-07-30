@@ -7,29 +7,33 @@ public class Character : MonoBehaviour {
 
     public float rateOfFire = 0.5f;
     public float speed = 5.0f;
-    public float energy = 100;
+    public static float energy = 100;
+    public static float maxEnergy = 100;
     public float bulletSpeed = 5000;
     public GameObject gun;
     public GameObject[] bullet;
     public GameObject ambientLight;
     public Text energyTextObject;
-
+    public static int healingBar;
     public float bulletCost = 1;
+
 
     private int forceSlow = 1;
     private Vector3 mousePos;
     private Vector3 objectPos;
     private float defaultSpeed = 5.0f;
     private float angle;
+    private float energyCounter;
     private GameObject bulletInstance;
     private Text energyText;
     private bool canShoot = true;
     private Animator characterAnim;
     private SpriteRenderer ambientRenderer;
-    private float energyCounter;
+
 
     void Start ()
     {
+        healingBar = 0;
         energyCounter = energy;
         ambientRenderer = ambientLight.GetComponent<SpriteRenderer>();
         characterAnim = gameObject.GetComponent<Animator>();
@@ -39,6 +43,9 @@ public class Character : MonoBehaviour {
 	
 	void Update ()
     {
+        if (energy > 100)
+        energy = 100;
+
         BrightnessUpdater();
 
         //Ui Text
@@ -47,6 +54,7 @@ public class Character : MonoBehaviour {
         //Shoot
         if (Input.GetMouseButtonDown(0) && canShoot == true && energy >1)
         {
+            characterAnim.SetBool("Shooting", true);
             Shoot();
             canShoot = false;
             Invoke("BulletDelay", rateOfFire);
@@ -65,7 +73,7 @@ public class Character : MonoBehaviour {
         }
         else if (energyCounter < energy)
         {
-            ambientRenderer.color += new Color(0, 0, 0, 0.008f);
+            ambientRenderer.color += new Color(0, 0, 0, 0.008f) * Mathf.Abs(energy - energyCounter);
             energyCounter = energy;
         }
     }
@@ -119,6 +127,7 @@ public class Character : MonoBehaviour {
         else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             speed = defaultSpeed;
+            //TODO waste more energy
         }
     }
 
