@@ -40,7 +40,7 @@ public class EnemyBehaviour : MonoBehaviour
     {
         currentWP = SearchClosestWaypoint(waypoints,1000);
         playerTransform = playerGameObject.transform;
-        randomCurrentWP = (int)Mathf.Round(Random.Range(0f, 3f));
+        randomCurrentWP = (int)Mathf.Round(Random.Range(0f, waypoints.Length));
     }
 
     void FixedUpdate()
@@ -56,7 +56,7 @@ public class EnemyBehaviour : MonoBehaviour
 
             if (Vector2.Distance(waypoints[currentWP].transform.position, transform.position) < accuracyWP)
             {
-                randomCurrentWP = (int)Mathf.Round(Random.Range(0f, 3f));
+                randomCurrentWP = (int)Mathf.Round(Random.Range(0f, waypoints.Length));
                 dist = Vector3.Distance(transform.position, waypoints[randomCurrentWP].transform.position);
                 direction = waypoints[randomCurrentWP].transform.position - transform.position;
 

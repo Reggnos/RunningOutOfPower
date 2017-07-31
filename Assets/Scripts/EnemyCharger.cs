@@ -10,7 +10,14 @@ public class EnemyCharger : MonoBehaviour {
     private bool startChase;
     private float timeToCharge;
     private bool startedCharging = false;
+    private bool startedToChargeUp = false;
     private Quaternion newRotation;
+    private Animator myAnimator;
+
+    private void Start()
+    {
+        myAnimator = GetComponent<Animator>();
+    }
 
     void FixedUpdate ()
     {
@@ -24,11 +31,16 @@ public class EnemyCharger : MonoBehaviour {
 
             if ((Vector2.Distance(transform.position, enemyBehaviour.playerGameObject.transform.position) < 6  || (timeToCharge > 0 && timeToCharge < 2)) && !startedCharging)
             {
+                startedToChargeUp = true;
+                myAnimator.SetBool("startedToChargeUp", startedToChargeUp);
                 timeToCharge += Time.deltaTime;
                 enemyBehaviour.speedChase = 0;                
                 playerLastPosition = enemyBehaviour.playerGameObject.transform.position;
                 if (timeToCharge > 2)
+                {
                     startedCharging = true;
+                }
+                    
             }
             else if(startedCharging)
             {
@@ -41,6 +53,8 @@ public class EnemyCharger : MonoBehaviour {
             }
             else
             {
+                startedToChargeUp = false;
+                myAnimator.SetBool("startedToChargeUp", startedToChargeUp);
                 enemyBehaviour.speedChase = 5f;
             }
            
@@ -51,10 +65,18 @@ public class EnemyCharger : MonoBehaviour {
 
     void Charge()
     {
+        startedToChargeUp = false;
+        myAnimator.SetBool("startedToChargeUp", startedToChargeUp);
+        myAnimator.SetBool("Hit", true);
         enemyBehaviour.isChaser = false;
         startedCharging = false;
         timeToCharge = 0;
-        
+        Invoke("StopToHit", 0.5f);
+    }
+
+    void StopToHit()
+    {
+        myAnimator.SetBool("Hit", false);
     }
 
 }
