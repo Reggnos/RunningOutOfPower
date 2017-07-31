@@ -8,7 +8,9 @@ public class Bullet : MonoBehaviour {
     public float bulletSpeed = 5;
     public GameObject character;
     public AudioClip shot;
+    public AudioClip energyLoss;
 
+    private GameObject gun;
     private ParticleSystem spark;
     private Character characterScript;
     private Vector3 mousePos;
@@ -16,11 +18,11 @@ public class Bullet : MonoBehaviour {
     private AudioSource audioSource;
 
     void Start () {
-        audioSource = GetComponent<AudioSource>();
+        gun = GameObject.FindGameObjectWithTag("Gun");
+        audioSource = gun.GetComponent<AudioSource>();
         audioSource.pitch = (Random.Range(0.6f, 1.5f));
         audioSource.PlayOneShot(shot);
         spark = GetComponent<ParticleSystem>();
-        //spark.Play();
         characterScript = character.GetComponent<Character>();
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = transform.position.z;
@@ -72,6 +74,7 @@ public class Bullet : MonoBehaviour {
         }
         else
         {
+            audioSource.PlayOneShot(energyLoss);
             Destroy(gameObject);
         }
     }

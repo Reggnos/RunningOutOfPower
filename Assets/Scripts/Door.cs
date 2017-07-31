@@ -21,7 +21,6 @@ public class Door : MonoBehaviour {
         audioSource = GetComponent<AudioSource>();
         boxCollider = GetComponent<BoxCollider2D>();
         sR = GetComponent<SpriteRenderer>();
-        Debug.Log(obstacleGen);
 	}
 	
 	// Update is called once per frame

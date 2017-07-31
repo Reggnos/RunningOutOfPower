@@ -7,6 +7,7 @@ public class GameController : MonoBehaviour {
     public GameObject character;
     public GameObject pauseScreen;
     public GameObject[] chargingStations;
+    public Texture2D cursorTexture;
 
     private Character characterScript;
     private GameObject selectedStation;
@@ -15,8 +16,9 @@ public class GameController : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
+        Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
         characterScript = character.GetComponent<Character>();
-        Invoke("ActivateStation",30);
+        Invoke("ActivateStation",45);
     }
 	
 	// Update is called once per frame
@@ -50,6 +52,6 @@ public class GameController : MonoBehaviour {
         Debug.Log("Activating Station" + selectedStation.name);
         chargingScript = selectedStation.GetComponent<ChargingStation>();
         chargingScript.isStationOn = true;
-        Invoke("ActivateStation", 15);
+        Invoke("ActivateStation", 45);
     }
 }

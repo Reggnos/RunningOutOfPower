@@ -4,11 +4,29 @@ using UnityEngine;
 
 public class EnemyTest : MonoBehaviour
 {
-    public int health = 2;
+    public string enemyType;
+    public int health;
     private Collider2D myCollider;
+    public bool hit = false;
 
     private void Start()
     {
+        if (enemyType == "Charger")
+        {
+            health = 10;
+        }
+        else if (enemyType == "Chaser")
+        {
+            health = 2;
+        }
+        else if (enemyType == "Chaser2")
+        {
+            health = 2;
+        }
+        else if (enemyType == "Shooter")
+        {
+            health = 5;
+        }
         myCollider = GetComponent<Collider2D>();
         Physics2D.IgnoreCollision(myCollider, myCollider);
     }
@@ -23,7 +41,7 @@ public class EnemyTest : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.tag == "Meele")
+        if (other.gameObject.tag == "Meele" && enemyType == "Shooter" || enemyType == "Chaser2")
         {
             {
                 if (Character.healingBar == 12)
@@ -76,7 +94,16 @@ public class EnemyTest : MonoBehaviour
                 }
             };
             Character.healingBar = 0;
-            health--;
+            health -= 2;
+            hit = true;
+        }
+        else if (other.gameObject.tag == "Frier")
+        {
+            health -= 3;
+        }
+        else if (other.gameObject.tag == "Meele")
+        {
+            health -= 2;
         }
     }
 
@@ -87,6 +114,15 @@ public class EnemyTest : MonoBehaviour
             Physics2D.IgnoreCollision(collision.collider, myCollider);
             //Physics2D.IgnoreCollision(gameObject.GetComponent<Collider2D>(), collision.gameObject.GetComponent<Collider2D>());
         }
+
+        if (collision.gameObject.tag == "Bullet")
+        {
+            health--;
+            hit = true;
+        }
+        
     }
+
+
 
 }

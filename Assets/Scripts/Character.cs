@@ -28,16 +28,18 @@ public class Character : MonoBehaviour {
     private GameObject bulletInstance;
     private Text energyText;
     private bool walking = false;
-    private bool running = false;
+    private bool running = false; //TODO Faster anim when running
     private bool canShoot = true;
     private bool soundPlaying = false;
     private Animator characterAnim;
     private SpriteRenderer ambientRenderer;
     private AudioSource audioSource;
+    private Rigidbody2D rb;
 
 
     void Start ()
     {
+        rb = GetComponent<Rigidbody2D>();
         audioSource = GetComponent<AudioSource>();
         healingBar = 0;
         energyCounter = energy;
@@ -111,6 +113,8 @@ public class Character : MonoBehaviour {
         if (Input.GetKey(KeyCode.W))
         {
             //transform.Translate(new Vector2(0, 1)*(Time.deltaTime * speed));
+            if (rb.velocity.y < -Vector2.up.y)
+                rb.velocity = new Vector2(rb.velocity.x, 0);
             GetComponent<Rigidbody2D>().AddForce(Vector2.up * speed / forceSlow);
             walking = true;
             characterAnim.SetBool("Walking", walking);
@@ -123,6 +127,8 @@ public class Character : MonoBehaviour {
         if (Input.GetKey(KeyCode.A))
         {
             //transform.Translate(new Vector2(-1, 0) * (Time.deltaTime * speed));
+            if (rb.velocity.x > -Vector2.left.x)
+                rb.velocity = new Vector2(0, rb.velocity.y);
             GetComponent<Rigidbody2D>().AddForce(Vector2.left * speed / forceSlow);
             walking = true;
             characterAnim.SetBool("Walking", walking);
@@ -135,6 +141,8 @@ public class Character : MonoBehaviour {
         if (Input.GetKey(KeyCode.S))
         {
             //transform.Translate(new Vector2(0, -1) * (Time.deltaTime * speed));
+            if (rb.velocity.y > Vector2.up.y)
+                rb.velocity = new Vector2(rb.velocity.x, 0);
             GetComponent<Rigidbody2D>().AddForce(-Vector2.up * speed / forceSlow);
             walking = true;
             characterAnim.SetBool("Walking", walking);
@@ -147,6 +155,8 @@ public class Character : MonoBehaviour {
         if (Input.GetKey(KeyCode.D))
         {
             //transform.Translate(new Vector2(1, 0) * (Time.deltaTime * speed));
+            if (rb.velocity.x < Vector2.left.x)
+                rb.velocity = new Vector2(0, rb.velocity.y);
             GetComponent<Rigidbody2D>().AddForce(-Vector2.left * speed / forceSlow);
             walking = true;
             characterAnim.SetBool("Walking", walking);
@@ -167,7 +177,7 @@ public class Character : MonoBehaviour {
             characterAnim.SetBool("Walking", walking);
         }
 
-            if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift))
         {
             energy -= 0.05f;
             speed = sprintSpeed;

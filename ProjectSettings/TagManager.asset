@@ -10,6 +10,8 @@ TagManager:
   - Door
   - Charging Station
   - Bullet
+  - Gun
+  - Frier
   layers:
   - Default
   - TransparentFX

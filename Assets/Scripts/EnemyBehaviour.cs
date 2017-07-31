@@ -6,10 +6,11 @@ public class EnemyBehaviour : MonoBehaviour
 {
     
     public GameObject playerGameObject;
-    private Transform playerTransform;
-    public Transform head;
     public GameObject[] waypoints;
     public GameObject[] chasepoints;
+    private EnemyTest enemyTest;
+    private Transform playerTransform;
+    public Transform head;    
     private Quaternion newRotation;
     private Vector3 lastPosition;
     public Vector2 direction ;
@@ -17,20 +18,25 @@ public class EnemyBehaviour : MonoBehaviour
     public float rotSpeed;
     public float speedIdle = 3f;
     public float speedChase = 5f;
-    private float accuracyWP = 1.0f;
+    private float accuracyWP = 1.0f;  
     private float dist;
     private float angle;
-
     // bool lookAround = false
     public int enemyAngle;
-    int searchClosest;
-    int currentWP = 0;
-    int randomCurrentWP;
+    private int searchClosest;
+    private int currentWP = 0;
+    private int randomCurrentWP;
+    private int[] currentWParray;
+    private int searchClosestPrevious;
+
 
     public bool idle = true;
     bool goingClosest = false;
     bool findClosest = true;
     public bool isChaser = false;
+    bool next = false;
+    bool tryingToFind = false;
+    bool wasChasing = false;
     //bool lookAroundRotate = true;
 
 
@@ -38,38 +44,39 @@ public class EnemyBehaviour : MonoBehaviour
 
     private void Start()
     {
+        enemyTest = GetComponent<EnemyTest>();
+        currentWParray = new int[4];
         currentWP = SearchClosestWaypoint(waypoints,1000);
         playerTransform = playerGameObject.transform;
-        randomCurrentWP = (int)Mathf.Round(Random.Range(0f, waypoints.Length));
+        randomCurrentWP = (int)Mathf.Round(Random.Range(0f, waypoints.Length - 1));
     }
 
     void FixedUpdate()
     {
-
-        //Debug.Log();
-       
+        
+        //Debug.Log();      
         //start of idle walk
         if (idle == true && waypoints.Length > 0)
         {
-            enemyAngle = 30;
-                   
+            enemyAngle = 180;
 
-            if (Vector2.Distance(waypoints[currentWP].transform.position, transform.position) < accuracyWP)
+            
+
+            if (Vector2.Distance(waypoints[currentWP].transform.position, transform.position) < accuracyWP || wasChasing)
             {
-                randomCurrentWP = (int)Mathf.Round(Random.Range(0f, waypoints.Length));
-                dist = Vector3.Distance(transform.position, waypoints[randomCurrentWP].transform.position);
-                direction = waypoints[randomCurrentWP].transform.position - transform.position;
+                wasChasing = false;              
+                currentWParray[0] = SearchClosestWaypoint(waypoints, currentWP);
+                currentWParray[1] = SearchClosestWaypoint(waypoints, currentWP, currentWParray[0]);
+                currentWParray[2] = SearchClosestWaypoint(waypoints, currentWP, currentWParray[0], currentWParray[1]);
+                currentWParray[3] = SearchClosestWaypoint(waypoints, currentWP, currentWParray[0], currentWParray[1], currentWParray[2]);
 
-                if (Physics2D.Raycast(transform.position, direction, dist).collider != null)
-                {
-                    currentWP = SearchClosestWaypoint(waypoints, currentWP);
-                    
-                }
-                else
-                {
-                    currentWP = randomCurrentWP;  
-                }
                 
+                randomCurrentWP = (int)Mathf.Round(Random.Range(0f, 3f));
+                currentWP = currentWParray[randomCurrentWP];
+                dist = Vector3.Distance(transform.position, waypoints[currentWP].transform.position);
+                direction = waypoints[currentWP].transform.position - transform.position;
+
+
             }
            
             // Debug.Log(currentWP+" "+ Physics2D.Raycast(transform.position, direction, dist).rigidbody);
@@ -83,30 +90,51 @@ public class EnemyBehaviour : MonoBehaviour
         //start of chasing
         if (!isChaser)
         {
-            direction = playerTransform.position - transform.position;
+            direction = playerGameObject.transform.position - transform.position;
             rotSpeed = 20;
+            
         }
         else
         {
             rotSpeed = 0;
         }
 
+        dist = Vector3.Distance(transform.position, playerGameObject.transform.position);
         angle = Vector2.Angle(playerTransform.position - transform.position, head.up);
+        /*
+        if (goingClosest && !isChaser)
+        {
+            enemyAngle = 180;
+        }
+        */
 
-        if (Vector3.Distance(playerTransform.position, transform.position) < 10 && (angle < enemyAngle))
+        if (Vector3.Distance(playerTransform.position, transform.position) < 10 && ((angle < enemyAngle) || enemyTest.hit)  && Physics2D.Raycast(transform.position, direction, dist).collider == null )
         {
             idle = false;
             
-            dist = Vector3.Distance(transform.position, playerGameObject.transform.position);
-
             KeepChasing(speedChase);
             lastPosition = playerTransform.position;
+            tryingToFind = true;
+            direction = lastPosition - transform.position;
 
         }
         else if (idle == false)
         {
+            if(Physics2D.Raycast(transform.position, direction, dist).collider == null)
+            {
+                if (Vector2.Distance(lastPosition, transform.position) > 4)
+                {
+                    direction = lastPosition - transform.position;
+                    dist = Vector3.Distance(transform.position, lastPosition);
+                    KeepChasing(speedChase);
+                }
+                else
+                {
+                    Invoke("Move", 2);
+                }
 
-            if (Vector2.Distance(lastPosition, transform.position) > 4)
+            }
+            else if(tryingToFind)
             {
                 KeepChasing(speedChase);
             }
@@ -114,50 +142,72 @@ public class EnemyBehaviour : MonoBehaviour
             {
                 Invoke("Move", 2);
             }
+                     
+            
 
         }
+        
     }
 
     private void Move()
     {
+        enemyTest.hit = false;
         idle = true;
     }
 
     private void KeepChasing(float speed)
     {
-        if (Physics2D.Raycast(transform.position, direction, DistanceForRaycast(dist)).collider == null && !goingClosest)
-        {
+        if (Physics2D.Raycast(transform.position, direction, dist).collider == null && !goingClosest)
+        {           
             RotateAndMove(speedChase);            
         }
-        else //if(!lookAround)
+        else 
         {
+            
             goingClosest = true;
             if (findClosest)
             {
-                searchClosest = SearchClosestChasepoint(chasepoints);
+                searchClosestPrevious = SearchClosestChasepoint(chasepoints);
                 findClosest = false;
+                
+                if(searchClosestPrevious % 2 == 0)
+                {
+                    searchClosest = searchClosestPrevious - 1;
+                }
+                else
+                {
+                    searchClosest = searchClosestPrevious + 1;
+                }
             }   
 
-            direction = chasepoints[searchClosest].transform.position - transform.position;
-            RotateAndMove(speedChase);
-            
-            
-            if (Vector2.Distance(chasepoints[searchClosest].transform.position, transform.position) < accuracyWP)
+            if(!next)
             {
-                idle = true;
+                direction = chasepoints[searchClosestPrevious].transform.position - transform.position;
+                RotateAndMove(speedIdle);
+            }
+            else
+            {
+                direction = chasepoints[searchClosest].transform.position - transform.position;
+                RotateAndMove(speedIdle);
+            }
+                    
+            if (Vector2.Distance(chasepoints[searchClosestPrevious].transform.position, transform.position) < accuracyWP && !next)
+            {              
+                next = true;               
+            }
+            else if(Vector2.Distance(chasepoints[searchClosest].transform.position, transform.position) < accuracyWP && next)
+            {
+                next = false;
                 goingClosest = false;
                 findClosest = true;
-              //  lookAround = true;          
+                idle = true;
+                tryingToFind = false;
+                wasChasing = true;
             }
-
             
-        }
-       /* else
-        {
-            LookAround();
-        }*/
 
-        
+        }
+          
     }
 
     void RotateAndMove(float speed)
@@ -173,31 +223,53 @@ public class EnemyBehaviour : MonoBehaviour
     {
         float closestDistance = Mathf.Infinity;
         int l = chasepoints.Length, closestWay = 0;
-        Vector2 fromEnemyToWaypoint;
+        Vector2 fromCharacterToWaypoint;
         for (int i = 0; i < l; i++)
-        {
+        {           
+              dist = Vector3.Distance(playerGameObject.transform.position, chasepoints[i].transform.position);
+              fromCharacterToWaypoint = chasepoints[i].transform.position - playerGameObject.transform.position;
 
-            dist = Vector3.Distance(transform.position, chasepoints[i].transform.position);
-            fromEnemyToWaypoint = chasepoints[i].transform.position - transform.position;
+              if (dist < closestDistance && Physics2D.Raycast(transform.position, fromCharacterToWaypoint, dist).collider == null)
+              {
+                    closestDistance = dist;
+                    closestWay = i;
+              }            
+        }
+        if (closestWay != 0)
+            return closestWay;
+        else
+            return 1;
+    }
 
-            if (dist < closestDistance && Physics2D.Raycast(transform.position, fromEnemyToWaypoint, DistanceForRaycast(dist)).collider == null)
-            {
-                closestDistance = dist;
-                closestWay = i;
-            }
+    private int SearchClosestWaypoint(GameObject[] waypoints)
+    {
+        float closestDistance = Mathf.Infinity;
+        int l = waypoints.Length, closestWay = 0;
+
+        for (int i = 0; i < l; i++)
+        {         
+                dist = Vector3.Distance(transform.position, waypoints[i].transform.position);
+                Vector2 fromEnemyToWaypoint = waypoints[i].transform.position - transform.position;
+
+                if (dist < closestDistance && Physics2D.Raycast(transform.position, fromEnemyToWaypoint, dist).collider == null)
+                {
+                    closestDistance = dist;
+                    closestWay = i;
+                }          
         }
 
         return closestWay;
     }
 
-    private int SearchClosestWaypoint(GameObject[] waypoints,int skip)
+    private int SearchClosestWaypoint(GameObject[] waypoints,int skipOriginal,int skip1 = 1000,int skip2 = 1000, int skip3 = 1000)
     {
         float closestDistance = Mathf.Infinity;
         int l = waypoints.Length, closestWay = 0;
+        
 
         for (int i = 0; i < l ; i++)
         {
-            if (i != skip)
+            if (i != skipOriginal && i != skip1 && i != skip2 && i != skip3)
             {
                 dist = Vector3.Distance(transform.position, waypoints[i].transform.position);
                 Vector2 fromEnemyToWaypoint = waypoints[i].transform.position - transform.position;
@@ -212,32 +284,8 @@ public class EnemyBehaviour : MonoBehaviour
 
         return closestWay;
     }
- /*   private void LookAround()
-    {
-       Debug.Log(transform.rotation.eulerAngles.z);
-        if (transform.rotation.eulerAngles.z < 30 && lookAroundRotate)
-        {
-            
-            transform.Rotate(new Vector3(0, 0, 40* Time.deltaTime));
-        } 
-       /* else if (transform.rotation.eulerAngles.z > -30)
-        {
-            lookAroundRotate = false;
-            transform.Rotate(new Vector3(0, 0, -50 * Time.deltaTime));
-        }
-        else
-        {
-            lookAroundRotate = true;
-            
-        }
-    }*/
-    float DistanceForRaycast(float dist)
-    {
-        if(dist < 3 )
-        return dist;
-        else 
-        return 3;
-    }
+ 
+   
 
 }
 

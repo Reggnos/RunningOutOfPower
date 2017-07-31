@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class EnemyCharger : MonoBehaviour {
 
-   
+
+    public float damage = 20.0f;
     public EnemyBehaviour enemyBehaviour;
     private Vector2 playerLastPosition;
     private bool startChase;
@@ -27,7 +28,7 @@ public class EnemyCharger : MonoBehaviour {
 
         if (startChase)
         {     
-            Debug.Log(Vector2.Distance(transform.position, enemyBehaviour.playerGameObject.transform.position));
+            //Debug.Log(Vector2.Distance(transform.position, enemyBehaviour.playerGameObject.transform.position));
 
             if ((Vector2.Distance(transform.position, enemyBehaviour.playerGameObject.transform.position) < 6  || (timeToCharge > 0 && timeToCharge < 2)) && !startedCharging)
             {
@@ -77,6 +78,14 @@ public class EnemyCharger : MonoBehaviour {
     void StopToHit()
     {
         myAnimator.SetBool("Hit", false);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            Character.energy -= damage;
+        }
     }
 
 }

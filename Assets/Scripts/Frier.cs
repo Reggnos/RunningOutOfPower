@@ -10,10 +10,12 @@ public class Frier : MonoBehaviour {
     public GameObject lightElectric;
 
     private Collider2D frierCol;
-    
+    private AudioSource audioSource;
+    private bool isOn = false;
 
 	void Start ()
     {
+        audioSource = GetComponent<AudioSource>();
         frierCol = frier.GetComponent<BoxCollider2D>();
 	}
 	
@@ -30,12 +32,15 @@ public class Frier : MonoBehaviour {
                 frierCol.enabled = true;
                 particles.Play();
                 Invoke("TurnOff", 5);
+                audioSource.Play();
             }
         }
     }
 
     void TurnOff()
     {
+        audioSource.Stop();
+        isOn = false;
         lightElectric.SetActive(false);
         frierCol.enabled = false;
         particles.Stop();

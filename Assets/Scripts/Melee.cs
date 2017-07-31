@@ -5,14 +5,18 @@ using UnityEngine;
 public class Melee : MonoBehaviour {
 
     public GameObject character;
+    public AudioClip miss;
+    public AudioClip hit; //Todo Add more
 
     private Animator characterAnim;
     private BoxCollider2D meeleBox;
     private EnemyTest enemytest;
+    private AudioSource audioSource;
 
     // Use this for initialization
     void Start ()
     {
+        audioSource = GetComponent<AudioSource>();
         characterAnim = character.GetComponent<Animator>();
         meeleBox = gameObject.GetComponent<BoxCollider2D>();
         characterAnim.SetBool("Meleeing", false);
@@ -31,7 +35,7 @@ public class Melee : MonoBehaviour {
     {
         if (meeleBox.enabled == false)
         {
-            Invoke("ActivateBox", 0.25f);
+            Invoke("ActivateBox", 0.1f);
             meeleBox.enabled = true;
             characterAnim.SetBool("Meleeing", true);
         }
@@ -42,7 +46,21 @@ public class Melee : MonoBehaviour {
         }
     }
 
-    
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log("here");
+        if (collision.gameObject.tag == "Enemy")
+        {
+            audioSource.PlayOneShot(hit);
+        }
+        else if (collision.gameObject.tag == "")
+        {
+            audioSource.PlayOneShot(miss);
+        }
+    }
+
+
+
 }
 
 

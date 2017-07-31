@@ -5,6 +5,7 @@ using UnityEngine;
 public class ChargingStation : MonoBehaviour {
 
     public bool isStationOn = false;
+    public GameObject lightSource;
 
     private AudioSource audioSource;
     private bool isPlaying = false;
@@ -23,11 +24,12 @@ public class ChargingStation : MonoBehaviour {
         {
             if (isPlaying == false)
             {
+                lightSource.SetActive(true);
                 audioSource.Play();
                 isPlaying = true;
             }
             chargerAnim.SetBool("Active", true);
-            Invoke("TurnOff", 10);
+            Invoke("TurnOff", 15);
         }
 
     }
@@ -51,6 +53,7 @@ public class ChargingStation : MonoBehaviour {
         audioSource.Stop();
         isStationOn = false;
         isPlaying = false;
+        lightSource.SetActive(false);
     }
 
 }

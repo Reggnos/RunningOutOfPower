@@ -162,7 +162,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 93cdc15879b570b419a0b944830d5940, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 427ce4748fb412848a2cee1265f67342, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.566
   m_Pitch: 1
@@ -281,6 +281,7 @@ MonoBehaviour:
   bulletSpeed: 10
   character: {fileID: 1728334434016120, guid: d9a2a2b6cae32734a9f3e8a207f5feb9, type: 2}
   shot: {fileID: 8300000, guid: f11aab849c083ec4c85c9eec809ea250, type: 3}
+  energyLoss: {fileID: 8300000, guid: 427ce4748fb412848a2cee1265f67342, type: 3}
 --- !u!198 &198692133170262016
 ParticleSystem:
   m_ObjectHideFlags: 1
