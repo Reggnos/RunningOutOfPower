@@ -5,6 +5,13 @@ using UnityEngine;
 public class EnemyTest : MonoBehaviour
 {
     public int health = 2;
+    private Collider2D myCollider;
+
+    private void Start()
+    {
+        myCollider = GetComponent<Collider2D>();
+        Physics2D.IgnoreCollision(myCollider, myCollider);
+    }
 
     void Update()
     {
@@ -70,6 +77,15 @@ public class EnemyTest : MonoBehaviour
             };
             Character.healingBar = 0;
             health--;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Enemy")
+        {
+            Physics2D.IgnoreCollision(collision.collider, myCollider);
+            //Physics2D.IgnoreCollision(gameObject.GetComponent<Collider2D>(), collision.gameObject.GetComponent<Collider2D>());
         }
     }
 
