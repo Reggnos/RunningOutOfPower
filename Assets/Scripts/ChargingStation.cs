@@ -6,14 +6,14 @@ public class ChargingStation : MonoBehaviour {
 
     public bool isStationOn = false;
 
-    private SpriteRenderer sR;
     private AudioSource audioSource;
     private bool isPlaying = false;
+    private Animator chargerAnim;
 
     void Start()
     {
+        chargerAnim = GetComponent<Animator>();
         isStationOn = false;
-        sR = GetComponent<SpriteRenderer>();
         audioSource = GetComponent<AudioSource>();
     }
 
@@ -23,10 +23,10 @@ public class ChargingStation : MonoBehaviour {
         {
             if (isPlaying == false)
             {
-                //audioSource.Play();
+                audioSource.Play();
                 isPlaying = true;
             }
-            sR.color = Color.green;
+            chargerAnim.SetBool("Active", true);
             Invoke("TurnOff", 10);
         }
 
@@ -36,15 +36,21 @@ public class ChargingStation : MonoBehaviour {
     {
         if (collision.gameObject.tag == "Player" && isStationOn == true)
         {
-            Character.energy += 0.02f;
+            Character.energy += 0.2f;
+            Character.passiveEnergyLoss = 0;
         }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        Character.passiveEnergyLoss = 0.5f;
     }
 
     void TurnOff()
     {
+        chargerAnim.SetBool("Active", false);
+        audioSource.Stop();
         isStationOn = false;
         isPlaying = false;
-        sR.color = Color.white;
     }
 
 }

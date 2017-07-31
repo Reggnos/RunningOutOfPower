@@ -9,6 +9,7 @@ TagManager:
   - Healing Bar
   - Door
   - Charging Station
+  - Bullet
   layers:
   - Default
   - TransparentFX

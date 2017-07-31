@@ -8,12 +8,14 @@ public class Bullet : MonoBehaviour {
     public float bulletSpeed = 5;
     public GameObject character;
 
-
+    private ParticleSystem spark;
     private Character characterScript;
     private Vector3 mousePos;
     private Vector3 normalizeDirection;
 
     void Start () {
+        spark = GetComponent<ParticleSystem>();
+        //spark.Play();
         characterScript = character.GetComponent<Character>();
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = transform.position.z;
@@ -37,9 +39,13 @@ public class Bullet : MonoBehaviour {
         Destroy(gameObject);
     }
 
+    void PlaySystem()
+    {
+        spark.Play();
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log(Character.healingBar);
         if (collision.gameObject.tag == "Enemy" && Character.healingBar <12)
         {
             Character.healingBar++;

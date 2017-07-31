@@ -23,6 +23,6 @@ public class TipRandomizer : MonoBehaviour
     private void ChageTip()
     {
         //TODO FIX NON EXISTING ERROR
-        textComp.text = tips[Random.Range(0, 12)];
+        textComp.text = tips[Random.Range(0, tips.Length)];
     }
 }

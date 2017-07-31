@@ -16,6 +16,7 @@ public class Character : MonoBehaviour {
     public Text energyTextObject;
     public static int healingBar;
     public float bulletCost = 1;
+    public static float passiveEnergyLoss = 0.5f;
 
 
     private int forceSlow = 1;
@@ -50,7 +51,7 @@ public class Character : MonoBehaviour {
         BrightnessUpdater();
 
         //Ui Text
-        energyText.text = energy.ToString();
+        energyText.text = energy.ToString("f1");
 
         //Shoot
         if (Input.GetMouseButtonDown(0) && canShoot == true && energy >1)
@@ -65,16 +66,17 @@ public class Character : MonoBehaviour {
         RotateTowardsMouse();
         Movement();
     }
+
     private void BrightnessUpdater()
     {
         if (energyCounter > energy)
         {
-            ambientRenderer.color -= new Color(0, 0, 0, 0.008f) * Mathf.Abs(energy - energyCounter);
+            ambientRenderer.color -= new Color(0, 0, 0, 0.004f) * Mathf.Abs(energy - energyCounter);
             energyCounter = energy;
         }
         else if (energyCounter < energy)
         {
-            ambientRenderer.color += new Color(0, 0, 0, 0.008f) * Mathf.Abs(energy - energyCounter);
+            ambientRenderer.color += new Color(0, 0, 0, 0.004f) * Mathf.Abs(energy - energyCounter);
             energyCounter = energy;
         }
     }
@@ -147,6 +149,6 @@ public class Character : MonoBehaviour {
     private void PassiveEnergyLoss()
     {
         Invoke("PassiveEnergyLoss", 1);
-        energy -= 0.5f;
+        energy -= passiveEnergyLoss;
     }
 }

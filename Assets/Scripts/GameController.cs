@@ -16,7 +16,7 @@ public class GameController : MonoBehaviour {
 	void Start ()
     {
         characterScript = character.GetComponent<Character>();
-        Invoke("ActivateStation",5);
+        Invoke("ActivateStation",30);
     }
 	
 	// Update is called once per frame
