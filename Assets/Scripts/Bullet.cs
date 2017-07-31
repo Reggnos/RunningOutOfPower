@@ -7,13 +7,18 @@ public class Bullet : MonoBehaviour {
 
     public float bulletSpeed = 5;
     public GameObject character;
+    public AudioClip shot;
 
     private ParticleSystem spark;
     private Character characterScript;
     private Vector3 mousePos;
     private Vector3 normalizeDirection;
+    private AudioSource audioSource;
 
     void Start () {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.pitch = (Random.Range(0.6f, 1.5f));
+        audioSource.PlayOneShot(shot);
         spark = GetComponent<ParticleSystem>();
         //spark.Play();
         characterScript = character.GetComponent<Character>();

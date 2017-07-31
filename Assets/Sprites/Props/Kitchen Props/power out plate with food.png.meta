@@ -1,10 +1,12 @@
 fileFormatVersion: 2
-guid: eb3f6071ab3fd334e9272c0c2ab56771
-timeCreated: 1501496670
+guid: 6be8ea653e18b2840ba1fdb0e9cf9736
+timeCreated: 1501499929
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Bench_0
+    21300000: power out plate with food_0
+    21300002: power out plate with food_1
+    21300004: power out plate with food_2
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -46,7 +48,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 250
+  spritePixelsToUnits: 200
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -92,13 +94,41 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Bench_0
+      name: power out plate with food_0
       rect:
         serializedVersion: 2
-        x: 349
-        y: 51
-        width: 81
-        height: 791
+        x: 69
+        y: 162
+        width: 65
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: power out plate with food_1
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 63
+        width: 87
+        height: 87
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: power out plate with food_2
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 43
+        width: 74
+        height: 10
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

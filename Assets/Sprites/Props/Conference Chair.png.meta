@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: eb3f6071ab3fd334e9272c0c2ab56771
-timeCreated: 1501496670
+guid: 463bca0ab5eff9d4eb13738187d0ddd2
+timeCreated: 1501497430
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Bench_0
+    21300000: Conference Chair_0
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -46,7 +46,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 250
+  spritePixelsToUnits: 150
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -92,13 +92,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Bench_0
+      name: Conference Chair_0
       rect:
         serializedVersion: 2
-        x: 349
-        y: 51
-        width: 81
-        height: 791
+        x: 61
+        y: 54
+        width: 185
+        height: 186
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

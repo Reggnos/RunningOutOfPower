@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: eb3f6071ab3fd334e9272c0c2ab56771
-timeCreated: 1501496670
+guid: f2370d05979fe3647ba85f69531355dd
+timeCreated: 1501497634
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Bench_0
+    21300000: power_out_window_double_open_0
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -46,7 +46,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 250
+  spritePixelsToUnits: 150
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -92,13 +92,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Bench_0
+      name: power_out_window_double_open_0
       rect:
         serializedVersion: 2
-        x: 349
-        y: 51
-        width: 81
-        height: 791
+        x: 77
+        y: 79
+        width: 199
+        height: 656
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

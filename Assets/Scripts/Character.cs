@@ -17,8 +17,7 @@ public class Character : MonoBehaviour {
     public static int healingBar;
     public float bulletCost = 1;
     public static float passiveEnergyLoss = 0.5f;
-
-
+    
     private int forceSlow = 1;
     private Vector3 mousePos;
     private Vector3 objectPos;
@@ -28,13 +27,18 @@ public class Character : MonoBehaviour {
     private float energyCounter;
     private GameObject bulletInstance;
     private Text energyText;
+    private bool walking = false;
+    private bool running = false;
     private bool canShoot = true;
+    private bool soundPlaying = false;
     private Animator characterAnim;
     private SpriteRenderer ambientRenderer;
+    private AudioSource audioSource;
 
 
     void Start ()
     {
+        audioSource = GetComponent<AudioSource>();
         healingBar = 0;
         energyCounter = energy;
         ambientRenderer = ambientLight.GetComponent<SpriteRenderer>();
@@ -45,6 +49,7 @@ public class Character : MonoBehaviour {
 	
 	void Update ()
     {
+            
         if (energy > 100)
         energy = 100;
 
@@ -64,6 +69,7 @@ public class Character : MonoBehaviour {
         }
 
         RotateTowardsMouse();
+
         Movement();
     }
 
@@ -106,24 +112,62 @@ public class Character : MonoBehaviour {
         {
             //transform.Translate(new Vector2(0, 1)*(Time.deltaTime * speed));
             GetComponent<Rigidbody2D>().AddForce(Vector2.up * speed / forceSlow);
+            walking = true;
+            characterAnim.SetBool("Walking", walking);
+            if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+                soundPlaying = true;
+            }
         }
         if (Input.GetKey(KeyCode.A))
         {
             //transform.Translate(new Vector2(-1, 0) * (Time.deltaTime * speed));
             GetComponent<Rigidbody2D>().AddForce(Vector2.left * speed / forceSlow);
+            walking = true;
+            characterAnim.SetBool("Walking", walking);
+            if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+                soundPlaying = true;
+            }
         }
         if (Input.GetKey(KeyCode.S))
         {
             //transform.Translate(new Vector2(0, -1) * (Time.deltaTime * speed));
             GetComponent<Rigidbody2D>().AddForce(-Vector2.up * speed / forceSlow);
+            walking = true;
+            characterAnim.SetBool("Walking", walking);
+            if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+                soundPlaying = true;
+            }
         }
         if (Input.GetKey(KeyCode.D))
         {
             //transform.Translate(new Vector2(1, 0) * (Time.deltaTime * speed));
             GetComponent<Rigidbody2D>().AddForce(-Vector2.left * speed / forceSlow);
+            walking = true;
+            characterAnim.SetBool("Walking", walking);
+            if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+                soundPlaying = true;
+            }
+        }
+        if (!Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.W))
+        {
+            if (soundPlaying == true)
+            {
+                soundPlaying = false;
+                audioSource.Stop();
+            }
+            walking = false;
+            characterAnim.SetBool("Walking", walking);
         }
 
-        if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftShift))
         {
             energy -= 0.05f;
             speed = sprintSpeed;
