@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 212979075992360382}
   - component: {fileID: 61304835882082960}
   - component: {fileID: 114518644216922652}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Melee
   m_TagString: Meele
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4545492007849288}
   - component: {fileID: 212811570632339404}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 114782280825026414}
   - component: {fileID: 23711370699728046}
   - component: {fileID: 33408790610798178}
-  m_Layer: 9
+  m_Layer: 2
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,10 +75,10 @@ GameObject:
   - component: {fileID: 50824864069528190}
   - component: {fileID: 61599746177049588}
   - component: {fileID: 114882896606665920}
-  - component: {fileID: 95726361002833322}
-  m_Layer: 0
+  - component: {fileID: 95548035368186786}
+  m_Layer: 2
   m_Name: Character
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -103,7 +103,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1728334434016120}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.152, y: -0.616, z: 0}
+  m_LocalPosition: {x: -40.468, y: -2.1859999, z: 0}
   m_LocalScale: {x: 5, y: 5, z: 1}
   m_Children:
   - {fileID: 4545492007849288}
@@ -247,7 +247,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.14, y: 0.14}
   m_EdgeRadius: 0
---- !u!95 &95726361002833322
+--- !u!95 &95548035368186786
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 1
@@ -306,10 +306,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rateOfFire: 0.25
   speed: 5
-  energy: 100
   bulletSpeed: 5000
   gun: {fileID: 1261647212098806}
-  bullet: {fileID: 1790001140298952, guid: 0df96a7f06e4cdc44a32683768f71896, type: 2}
+  bullet:
+  - {fileID: 1790001140298952, guid: 0df96a7f06e4cdc44a32683768f71896, type: 2}
+  - {fileID: 1150353453237292, guid: e8730104ca52f7e40bc00615f902905e, type: 2}
+  - {fileID: 1656944463727980, guid: f58171471bcfa604aa3409433dddb950, type: 2}
+  - {fileID: 1475907506161514, guid: 983f2b740e17e444eb741919ad3347fc, type: 2}
+  ambientLight: {fileID: 0}
   energyTextObject: {fileID: 0}
   bulletCost: 1
 --- !u!212 &212094044962085982
