@@ -21,11 +21,12 @@ GameObject:
   - component: {fileID: 4486391579244888}
   - component: {fileID: 212094827292219630}
   - component: {fileID: 114953286622226862}
-  - component: {fileID: 61330717898371810}
   - component: {fileID: 50853764715802818}
   - component: {fileID: 114890498386752058}
   - component: {fileID: 114140055435794006}
   - component: {fileID: 95465341585123146}
+  - component: {fileID: 82596630583739622}
+  - component: {fileID: 58400040470056656}
   m_Layer: 2
   m_Name: EnemyShooter
   m_TagString: Enemy
@@ -96,8 +97,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!61 &61330717898371810
-BoxCollider2D:
+--- !u!58 &58400040470056656
+CircleCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -108,19 +109,89 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.013397217, y: -0.15333438}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.11, y: 1.2}
-    newSize: {x: 0.16, y: 0.16}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
+  m_Offset: {x: 0.013893127, y: -0.069480896}
   serializedVersion: 2
-  m_Size: {x: 0.942749, y: 0.7701447}
-  m_EdgeRadius: 0
+  m_Radius: 0.5547371
+--- !u!82 &82596630583739622
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1179031496700850}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: f11aab849c083ec4c85c9eec809ea250, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0.216
+  m_Pitch: 1.08
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!95 &95465341585123146
 Animator:
   serializedVersion: 3
@@ -169,6 +240,7 @@ MonoBehaviour:
   enemyHead: {fileID: 1362583206022382}
   player: {fileID: 0}
   bulletSpeed: 5
+  shot: {fileID: 8300000, guid: f11aab849c083ec4c85c9eec809ea250, type: 3}
 --- !u!114 &114953286622226862
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -320,7 +392,7 @@ MonoBehaviour:
   rotSpeed: 0
   speedIdle: 3
   speedChase: 5
-  enemyAngle: 30
+  enemyAngle: 180
   idle: 1
   isChaser: 0
 --- !u!212 &212094827292219630

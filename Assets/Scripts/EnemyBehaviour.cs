@@ -18,7 +18,7 @@ public class EnemyBehaviour : MonoBehaviour
     public float rotSpeed;
     public float speedIdle = 3f;
     public float speedChase = 5f;
-    private float accuracyWP = 1.0f;  
+    private float accuracyWP = 0.2f;  
     private float dist;
     private float angle;
     // bool lookAround = false
@@ -28,6 +28,8 @@ public class EnemyBehaviour : MonoBehaviour
     private int randomCurrentWP;
     private int[] currentWParray;
     private int searchClosestPrevious;
+    private float goToRandomNumber = 0;
+    float waitedTooLong = 0;
 
 
     public bool idle = true;
@@ -49,40 +51,48 @@ public class EnemyBehaviour : MonoBehaviour
         currentWP = SearchClosestWaypoint(waypoints,1000);
         playerTransform = playerGameObject.transform;
         randomCurrentWP = (int)Mathf.Round(Random.Range(0f, waypoints.Length - 1));
+        direction = waypoints[currentWP].transform.position - transform.position;
     }
 
     void FixedUpdate()
     {
         
-        //Debug.Log();      
+        Debug.Log(enemyAngle);      
         //start of idle walk
         if (idle == true && waypoints.Length > 0)
         {
-            enemyAngle = 180;
-
             
-
-            if (Vector2.Distance(waypoints[currentWP].transform.position, transform.position) < accuracyWP || wasChasing)
+            enemyAngle = 180;
+            waitedTooLong += Time.deltaTime;
+            
+            if (Vector2.Distance(waypoints[currentWP].transform.position, transform.position) < accuracyWP || wasChasing || waitedTooLong > 8)
             {
+                waitedTooLong = 0;
+               
                 wasChasing = false;              
+
                 currentWParray[0] = SearchClosestWaypoint(waypoints, currentWP);
                 currentWParray[1] = SearchClosestWaypoint(waypoints, currentWP, currentWParray[0]);
+                if (currentWParray[1] != 0) goToRandomNumber++;
                 currentWParray[2] = SearchClosestWaypoint(waypoints, currentWP, currentWParray[0], currentWParray[1]);
+                if (currentWParray[2] != 0) goToRandomNumber++;
                 currentWParray[3] = SearchClosestWaypoint(waypoints, currentWP, currentWParray[0], currentWParray[1], currentWParray[2]);
+                if (currentWParray[3] != 0) goToRandomNumber++;
 
-                
-                randomCurrentWP = (int)Mathf.Round(Random.Range(0f, 3f));
+
+                randomCurrentWP = (int)Mathf.Round(Random.Range(0f, goToRandomNumber));
                 currentWP = currentWParray[randomCurrentWP];
                 dist = Vector3.Distance(transform.position, waypoints[currentWP].transform.position);
                 direction = waypoints[currentWP].transform.position - transform.position;
 
+                goToRandomNumber = 0;
 
             }
            
             // Debug.Log(currentWP+" "+ Physics2D.Raycast(transform.position, direction, dist).rigidbody);
 
             direction = waypoints[currentWP].transform.position - transform.position;
-            rotSpeed = 10;
+            rotSpeed = 15;
             RotateAndMove(speedIdle);
 
         }//end of idle walk
@@ -101,15 +111,11 @@ public class EnemyBehaviour : MonoBehaviour
 
         dist = Vector3.Distance(transform.position, playerGameObject.transform.position);
         angle = Vector2.Angle(playerTransform.position - transform.position, head.up);
-        /*
-        if (goingClosest && !isChaser)
-        {
-            enemyAngle = 180;
-        }
-        */
+      
 
         if (Vector3.Distance(playerTransform.position, transform.position) < 10 && ((angle < enemyAngle) || enemyTest.hit)  && Physics2D.Raycast(transform.position, direction, dist).collider == null )
         {
+            
             idle = false;
             
             KeepChasing(speedChase);
@@ -267,7 +273,7 @@ public class EnemyBehaviour : MonoBehaviour
         int l = waypoints.Length, closestWay = 0;
         
 
-        for (int i = 0; i < l ; i++)
+        for (int i = 1; i < l ; i++)
         {
             if (i != skipOriginal && i != skip1 && i != skip2 && i != skip3)
             {
@@ -279,9 +285,11 @@ public class EnemyBehaviour : MonoBehaviour
                     closestDistance = dist;
                     closestWay = i;
                 }
-            }
-        }
 
+            }
+        
+        }
+        //Debug.Log(closestWay);
         return closestWay;
     }
  

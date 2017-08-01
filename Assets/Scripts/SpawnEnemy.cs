@@ -12,16 +12,9 @@ public class SpawnEnemy : MonoBehaviour
         public int shooterCount;
         public int sum;
 
-        public EnemyNumber(int p1,int p2, int p3)
-            {
-            chaserCount = p1;
-            chargerCount = p2;
-            shooterCount = p3;
-            sum = chaserCount + chargerCount + shooterCount;
-            }
     };
 
-    static EnemyNumber numberOfEnemies = new EnemyNumber(0,0,0);      
+    static EnemyNumber numberOfEnemies = new EnemyNumber();     
 
     private EnemyBehaviour enemyBehaviourShooter;
     private EnemyShooter enemyShooter;
@@ -30,7 +23,9 @@ public class SpawnEnemy : MonoBehaviour
     private EnemyBehaviour enemyBehaviourChaser;
     private EnemyBehaviour enemyBehaviourChaser2;
     private int randomlyChosenEnemy;
+    private float timer = 0;
 
+    public int enemiesOnScreen = 0;
     public float spawnDelay = 5;
     private float spawnDelayCurrently;
     public GameObject player;
@@ -38,9 +33,12 @@ public class SpawnEnemy : MonoBehaviour
     public GameObject[] chasepoint;
     public GameObject[] enemyType;
     public int Wave = 1;
+    public bool energyPaused = true;
 
     void Start ()
     {
+        Wave = 1;
+
         enemyShooter = enemyType[0].GetComponent<EnemyShooter>();
         enemyBehaviourShooter = enemyType[0].GetComponent<EnemyBehaviour>();
         enemyBehaviourShooter.waypoints = new GameObject[waypoint.Length];
@@ -91,37 +89,77 @@ public class SpawnEnemy : MonoBehaviour
 
     private void Update()
     {
-        
-        if(numberOfEnemies.sum == 0)
-        switch(Wave)
+        Debug.Log(enemiesOnScreen);
+        numberOfEnemies.sum = numberOfEnemies.chaserCount + numberOfEnemies.chargerCount + numberOfEnemies.shooterCount;
+        if (enemiesOnScreen <= 0)
+        {
+            energyPaused = true;
+            timer += Time.deltaTime;
+        }
+        if (enemiesOnScreen <= 0 && timer > 15)
+        {
+            energyPaused = false;
+            timer = 0;
+            switch (Wave)
             {
                 case 1:
                     {
-                        numberOfEnemies.chaserCount = 20;
-                        numberOfEnemies.chargerCount = 3;
-                        numberOfEnemies.shooterCount = 2;
-                        numberOfEnemies.sum = numberOfEnemies.chaserCount + numberOfEnemies.chargerCount + numberOfEnemies.shooterCount;
+                        Debug.Log("Wave1 Started");
+                        numberOfEnemies.chaserCount = 10;
+                        numberOfEnemies.chargerCount = 2;
+                        numberOfEnemies.shooterCount = 4;
+                        enemiesOnScreen = numberOfEnemies.shooterCount + numberOfEnemies.chargerCount + numberOfEnemies.chaserCount;
                         Wave = 2;
                     }
                     break;
                 case 2:
                     {
-                        numberOfEnemies.chaserCount = 30;
-                        numberOfEnemies.chargerCount = 6;
-                        numberOfEnemies.shooterCount = 10;
-                        numberOfEnemies.sum = numberOfEnemies.chaserCount + numberOfEnemies.chargerCount + numberOfEnemies.shooterCount;
+                        Debug.Log("Wave2 Started");
+                        numberOfEnemies.chaserCount = 20;
+                        numberOfEnemies.chargerCount = 4;
+                        numberOfEnemies.shooterCount = 9;
+                        enemiesOnScreen = numberOfEnemies.shooterCount + numberOfEnemies.chargerCount + numberOfEnemies.chaserCount;
                         Wave = 3;
                     }
                     break;
                 case 3:
                     {
+                        Debug.Log("Wave3 Started");
+                        numberOfEnemies.chaserCount = 30;
+                        numberOfEnemies.chargerCount = 10;
+                        numberOfEnemies.shooterCount = 18;
+                        enemiesOnScreen = numberOfEnemies.shooterCount + numberOfEnemies.chargerCount + numberOfEnemies.chaserCount;
+                    }
+                    break;
+                case 4:
+                    {
+                        Debug.Log("Wave3 Started");
                         numberOfEnemies.chaserCount = 40;
-                        numberOfEnemies.chargerCount = 9;
-                        numberOfEnemies.shooterCount = 4;
-                        numberOfEnemies.sum = numberOfEnemies.chaserCount + numberOfEnemies.chargerCount + numberOfEnemies.shooterCount;
+                        numberOfEnemies.chargerCount = 10;
+                        numberOfEnemies.shooterCount = 25;
+                        enemiesOnScreen = numberOfEnemies.shooterCount + numberOfEnemies.chargerCount + numberOfEnemies.chaserCount;
+                    }
+                    break;
+                case 5:
+                    {
+                        Debug.Log("Wave3 Started");
+                        numberOfEnemies.chaserCount = 50;
+                        numberOfEnemies.chargerCount = 15;
+                        numberOfEnemies.shooterCount = 20;
+                        enemiesOnScreen = numberOfEnemies.shooterCount + numberOfEnemies.chargerCount + numberOfEnemies.chaserCount;
+                    }
+                    break;
+                case 6:
+                    {
+                        Debug.Log("Wave3 Started");
+                        numberOfEnemies.chaserCount = 60;
+                        numberOfEnemies.chargerCount = 20;
+                        numberOfEnemies.shooterCount = 30;
+                        enemiesOnScreen = numberOfEnemies.shooterCount + numberOfEnemies.chargerCount + numberOfEnemies.chaserCount;
                     }
                     break;
             }
+        }
     }
 
     void MakeEnemy()

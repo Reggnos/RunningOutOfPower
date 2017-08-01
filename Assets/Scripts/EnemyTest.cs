@@ -8,24 +8,56 @@ public class EnemyTest : MonoBehaviour
     public int health;
     private Collider2D myCollider;
     public bool hit = false;
+    private GameObject obj;
+    private SpawnEnemy spawnEnemy;
 
     private void Start()
     {
+        obj = GameObject.FindGameObjectWithTag("Spawn");
+        spawnEnemy = obj.GetComponent<SpawnEnemy>();
         if (enemyType == "Charger")
         {
-            health = 10;
+            if (spawnEnemy.Wave < 3)
+            {
+                health = 10;
+            }
+            else if (spawnEnemy.Wave > 3)
+            {
+                health = 20;
+            }
         }
         else if (enemyType == "Chaser")
         {
-            health = 2;
+            if (spawnEnemy.Wave < 3)
+            {
+                health = 2;
+            }
+            else if (spawnEnemy.Wave > 3)
+            {
+                health = 5;
+            }
         }
         else if (enemyType == "Chaser2")
         {
-            health = 2;
+            if (spawnEnemy.Wave < 3)
+            {
+                health = 2;
+            }
+            else if (spawnEnemy.Wave > 3)
+            {
+                health = 5;
+            }
         }
         else if (enemyType == "Shooter")
         {
-            health = 5;
+            if (spawnEnemy.Wave < 3)
+            {
+                health = 5;
+            }
+            else if (spawnEnemy.Wave > 3)
+            {
+                health = 10;
+            }
         }
         myCollider = GetComponent<Collider2D>();
         Physics2D.IgnoreCollision(myCollider, myCollider);
@@ -35,6 +67,7 @@ public class EnemyTest : MonoBehaviour
     {
         if (health <= 0)
         {
+            spawnEnemy.enemiesOnScreen--;
             Destroy(gameObject);
         }
     }

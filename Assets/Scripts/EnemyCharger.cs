@@ -14,9 +14,14 @@ public class EnemyCharger : MonoBehaviour {
     private bool startedToChargeUp = false;
     private Quaternion newRotation;
     private Animator myAnimator;
+    public AudioClip hit;
+    private AudioSource audioSource;
+    private bool runningTowards = false;
+
 
     private void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         myAnimator = GetComponent<Animator>();
     }
 
@@ -47,8 +52,8 @@ public class EnemyCharger : MonoBehaviour {
             {
                 enemyBehaviour.isChaser = true;
                 enemyBehaviour.direction = playerLastPosition - new Vector2(transform.position.x,transform.position.y);
-                enemyBehaviour.speedChase = 8f;
-                enemyBehaviour.enemyAngle = 300;
+                enemyBehaviour.speedChase = 11f;
+                enemyBehaviour.enemyAngle = 360;
 
                 Invoke("Charge",2);
             }
@@ -66,6 +71,7 @@ public class EnemyCharger : MonoBehaviour {
 
     void Charge()
     {
+        runningTowards = true;
         startedToChargeUp = false;
         myAnimator.SetBool("startedToChargeUp", startedToChargeUp);
         myAnimator.SetBool("Hit", true);
@@ -82,6 +88,13 @@ public class EnemyCharger : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        Debug.Log("hellow");
+        if (runningTowards)
+        {
+            runningTowards = false;
+            //audioSource.PlayOneShot(hit);
+            enemyBehaviour.speedChase = 0.0f;
+        }   
         if (collision.gameObject.tag == "Player")
         {
             Character.energy -= damage;

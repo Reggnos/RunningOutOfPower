@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 212979075992360382}
   - component: {fileID: 61304835882082960}
   - component: {fileID: 114518644216922652}
+  - component: {fileID: 82003731819050964}
   m_Layer: 2
   m_Name: Melee
   m_TagString: Meele
@@ -105,7 +106,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1728334434016120}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 30.862, y: 30.644, z: 0}
+  m_LocalPosition: {x: 15.07, y: 30.69, z: 0}
   m_LocalScale: {x: 5, y: 5, z: 1}
   m_Children:
   - {fileID: 4545492007849288}
@@ -249,6 +250,86 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.14, y: 0.14}
   m_EdgeRadius: 0
+--- !u!82 &82003731819050964
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1194351644248962}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 0.511
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!82 &82679480026128646
 AudioSource:
   m_ObjectHideFlags: 1
@@ -260,8 +341,8 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 29043d52af19c1341adfe302ab143bc4, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.493
-  m_Pitch: 1.2804506
+  m_Volume: 0.228
+  m_Pitch: 1.1
   Loop: 1
   Mute: 0
   Spatialize: 0
@@ -438,6 +519,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   character: {fileID: 1728334434016120}
+  miss: {fileID: 8300000, guid: 515a805aa56e1ac4e85582133c5a9d67, type: 3}
+  hit: {fileID: 8300000, guid: c886abe50d410c04d97266ae3e440887, type: 3}
 --- !u!114 &114782280825026414
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -478,6 +561,7 @@ MonoBehaviour:
   ambientLight: {fileID: 0}
   energyTextObject: {fileID: 0}
   bulletCost: 1
+  tutorial: {fileID: 0}
 --- !u!212 &212094044962085982
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -12,10 +12,13 @@ public class EnemyShooter : MonoBehaviour {
     public int bulletSpeed ;
     bool startShoot;
     bool wasShot = false;
+    public AudioClip shot;
+    private AudioSource audioSource;
 
-
-
-
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     void Update ()
     {
@@ -40,7 +43,7 @@ public class EnemyShooter : MonoBehaviour {
     {
         wasShot = true;
         bulletInstance = Instantiate(enemyBullet, enemyHead.transform.position, enemyHead.transform.rotation);
-
+        audioSource.PlayOneShot(shot);
         Invoke("BulletNoMore", 1);
 
     }

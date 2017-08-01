@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Character : MonoBehaviour {
 
@@ -17,7 +18,8 @@ public class Character : MonoBehaviour {
     public static int healingBar;
     public float bulletCost = 1;
     public static float passiveEnergyLoss = 0.5f;
-    
+    public GameObject tutorial;
+
     private int forceSlow = 1;
     private Vector3 mousePos;
     private Vector3 objectPos;
@@ -35,27 +37,55 @@ public class Character : MonoBehaviour {
     private SpriteRenderer ambientRenderer;
     private AudioSource audioSource;
     private Rigidbody2D rb;
+    private GameObject obj;
+    private SpawnEnemy spawnEnemy;
+    private bool losingEnergy = false;
 
 
     void Start ()
     {
+        Invoke("DestoryTut", 10);
+        energy = 100;
+        maxEnergy = 100;
+        obj = GameObject.FindGameObjectWithTag("Spawn");
+        spawnEnemy = obj.GetComponent<SpawnEnemy>();
         rb = GetComponent<Rigidbody2D>();
         audioSource = GetComponent<AudioSource>();
         healingBar = 0;
         energyCounter = energy;
         ambientRenderer = ambientLight.GetComponent<SpriteRenderer>();
         characterAnim = gameObject.GetComponent<Animator>();
-        PassiveEnergyLoss();
         energyText = energyTextObject.GetComponent<Text>();
 	}
-	
-	void Update ()
+
+    void Update()
     {
-            
+        if (spawnEnemy.energyPaused == false && losingEnergy == false)
+        {
+            losingEnergy = true;
+            Invoke("PassiveEnergyLoss", 1.5f);
+        }
+        else if (spawnEnemy.energyPaused == true)
+        {
+            losingEnergy = false;
+            CancelInvoke("PassiveEnergyLoss");
+        }
+
+
         if (energy > 100)
         energy = 100;
 
+        if (energy < 0)
+        {
+            SceneManager.LoadScene("Lose Screen");
+        }
+
         BrightnessUpdater();
+
+        if (Input.GetKeyDown("space"))
+        {
+            tutorial.SetActive(false);
+        }
 
         //Ui Text
         energyText.text = energy.ToString("f1");
@@ -179,7 +209,7 @@ public class Character : MonoBehaviour {
 
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            energy -= 0.05f;
+            energy -= 0.025f;
             speed = sprintSpeed;
         }
         else if (Input.GetKeyUp(KeyCode.LeftShift))
@@ -202,7 +232,13 @@ public class Character : MonoBehaviour {
 
     private void PassiveEnergyLoss()
     {
-        Invoke("PassiveEnergyLoss", 1);
+        losingEnergy = true;
+        Invoke("PassiveEnergyLoss", 1.5f);
         energy -= passiveEnergyLoss;
+    }
+
+    private void DestoryTut()
+    {
+        tutorial.SetActive(false);
     }
 }

@@ -12,6 +12,7 @@ TagManager:
   - Bullet
   - Gun
   - Frier
+  - Spawn
   layers:
   - Default
   - TransparentFX

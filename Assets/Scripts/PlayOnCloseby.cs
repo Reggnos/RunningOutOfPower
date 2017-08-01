@@ -38,6 +38,6 @@ public class PlayOnCloseby : MonoBehaviour {
     void PlaySound()
     {
         audioSource.PlayOneShot(snd);
-        Invoke("PlaySound", Random.Range(minRepeatTime, maxRepeatTime = 1.5f));
+        Invoke("PlaySound", Random.Range(minRepeatTime, maxRepeatTime));
     }
 }

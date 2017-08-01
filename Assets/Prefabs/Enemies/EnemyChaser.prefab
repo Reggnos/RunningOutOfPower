@@ -37,11 +37,12 @@ GameObject:
   - component: {fileID: 4290550293366098}
   - component: {fileID: 212052285142399662}
   - component: {fileID: 114306668425592112}
-  - component: {fileID: 61437653786299172}
   - component: {fileID: 50659333312641752}
   - component: {fileID: 114647996021188164}
   - component: {fileID: 95080821584442404}
   - component: {fileID: 114230242753370376}
+  - component: {fileID: 82355761498666984}
+  - component: {fileID: 58378415824513274}
   m_Layer: 2
   m_Name: EnemyChaser
   m_TagString: Enemy
@@ -96,8 +97,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!61 &61437653786299172
-BoxCollider2D:
+--- !u!58 &58378415824513274
+CircleCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -108,19 +109,89 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.010355949, y: 0.020711899}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5150277, y: 0.41707715}
-    oldSize: {x: 1.75, y: 1.11}
-    newSize: {x: 0.16, y: 0.16}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
+  m_Offset: {x: -0.022722244, y: -0.11227286}
   serializedVersion: 2
-  m_Size: {x: 0.76065254, y: 0.49139786}
-  m_EdgeRadius: 0
+  m_Radius: 0.42262018
+--- !u!82 &82355761498666984
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1971174240354730}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: d9a673f2b290f3e48a922c60c925138f, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0.053
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!95 &95080821584442404
 Animator:
   serializedVersion: 3
@@ -162,7 +233,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerGameObject: {fileID: 0}
-  head: {fileID: 4950990695609456}
   waypoints:
   - {fileID: 0}
   - {fileID: 0}
@@ -297,11 +367,12 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  head: {fileID: 4950990695609456}
   direction: {x: 0, y: 0}
   rotSpeed: 0
   speedIdle: 3
   speedChase: 5
-  enemyAngle: 30
+  enemyAngle: 180
   idle: 1
   isChaser: 0
 --- !u!114 &114647996021188164
@@ -317,6 +388,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyType: Chaser
   health: 2
+  hit: 0
 --- !u!212 &212052285142399662
 SpriteRenderer:
   m_ObjectHideFlags: 1

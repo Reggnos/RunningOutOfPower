@@ -48,7 +48,6 @@ public class Melee : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("here");
         if (collision.gameObject.tag == "Enemy")
         {
             audioSource.PlayOneShot(hit);

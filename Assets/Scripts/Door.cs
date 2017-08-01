@@ -36,6 +36,7 @@ public class Door : MonoBehaviour {
                 sR.enabled = true;
                 boxCollider.enabled = true;
                 Character.energy -= 10;
+                Invoke("OpenDoor", 30);
             }
         }
 
@@ -49,8 +50,10 @@ public class Door : MonoBehaviour {
         }
     }
 
-    void CloseDoor()
+    void OpenDoor()
     {
-
+        isLocked = false;
+        boxCollider.enabled = false;
+        sR.enabled = false;
     }
 }
