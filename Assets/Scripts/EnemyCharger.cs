@@ -6,23 +6,43 @@ public class EnemyCharger : MonoBehaviour {
 
 
     public float damage = 20.0f;
-    public EnemyBehaviour enemyBehaviour;
+    public float distance;
+    private EnemyBehaviour enemyBehaviour;
     private Vector2 playerLastPosition;
     private bool startChase;
     private float timeToCharge;
     private bool startedCharging = false;
     private bool startedToChargeUp = false;
-    private Quaternion newRotation;
     private Animator myAnimator;
     public AudioClip hit;
     private AudioSource audioSource;
     private bool runningTowards = false;
-
+    private bool hitSomething = true;
 
     private void Start()
     {
+        enemyBehaviour = GetComponent<EnemyBehaviour>();
         audioSource = GetComponent<AudioSource>();
         myAnimator = GetComponent<Animator>();
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag != "Bullet")
+        {
+            hitSomething = true;
+            Debug.Log("hellow");
+            if (runningTowards)
+            {
+                runningTowards = false;
+                audioSource.PlayOneShot(hit);
+
+            }
+            if (collision.gameObject.tag == "Player")
+            {
+                Character.energy -= damage;
+            }
+        }
     }
 
     void FixedUpdate ()
@@ -32,15 +52,21 @@ public class EnemyCharger : MonoBehaviour {
        
 
         if (startChase)
-        {     
+        {
             //Debug.Log(Vector2.Distance(transform.position, enemyBehaviour.playerGameObject.transform.position));
+            distance = (Vector2.Distance(transform.position, enemyBehaviour.playerGameObject.transform.position));
 
-            if ((Vector2.Distance(transform.position, enemyBehaviour.playerGameObject.transform.position) < 6  || (timeToCharge > 0 && timeToCharge < 2)) && !startedCharging)
+            if (distance < 6.0f  && !startedCharging && enemyBehaviour.isRaycast)
             {
+                hitSomething = false;
                 startedToChargeUp = true;
                 myAnimator.SetBool("startedToChargeUp", startedToChargeUp);
                 timeToCharge += Time.deltaTime;
-                enemyBehaviour.speedChase = 0;                
+                
+                if (distance < 2)
+                    enemyBehaviour.speedChase = 1;
+                else
+                    enemyBehaviour.speedChase = 3;
                 playerLastPosition = enemyBehaviour.playerGameObject.transform.position;
                 if (timeToCharge > 2)
                 {
@@ -50,15 +76,19 @@ public class EnemyCharger : MonoBehaviour {
             }
             else if(startedCharging)
             {
+                runningTowards = true;
                 enemyBehaviour.isChaser = true;
                 enemyBehaviour.direction = playerLastPosition - new Vector2(transform.position.x,transform.position.y);
-                enemyBehaviour.speedChase = 11f;
-                enemyBehaviour.enemyAngle = 360;
+                if(!hitSomething)
+                    enemyBehaviour.speedChase = 12f;
+                else
+                    enemyBehaviour.speedChase = 0f;
 
                 Invoke("Charge",2);
             }
             else
             {
+                timeToCharge = 0;
                 startedToChargeUp = false;
                 myAnimator.SetBool("startedToChargeUp", startedToChargeUp);
                 enemyBehaviour.speedChase = 5f;
@@ -70,8 +100,7 @@ public class EnemyCharger : MonoBehaviour {
     }
 
     void Charge()
-    {
-        runningTowards = true;
+    {     
         startedToChargeUp = false;
         myAnimator.SetBool("startedToChargeUp", startedToChargeUp);
         myAnimator.SetBool("Hit", true);
@@ -86,19 +115,6 @@ public class EnemyCharger : MonoBehaviour {
         myAnimator.SetBool("Hit", false);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        Debug.Log("hellow");
-        if (runningTowards)
-        {
-            runningTowards = false;
-            //audioSource.PlayOneShot(hit);
-            enemyBehaviour.speedChase = 0.0f;
-        }   
-        if (collision.gameObject.tag == "Player")
-        {
-            Character.energy -= damage;
-        }
-    }
+    
 
 }

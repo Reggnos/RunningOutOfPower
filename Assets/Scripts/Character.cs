@@ -24,7 +24,7 @@ public class Character : MonoBehaviour {
     private Vector3 mousePos;
     private Vector3 objectPos;
     private float defaultSpeed = 5.0f;
-    private float sprintSpeed = 10.0f;
+    private float sprintSpeed = 7.5f;
     private float angle;
     private float energyCounter;
     private GameObject bulletInstance;
@@ -102,7 +102,7 @@ public class Character : MonoBehaviour {
 
         RotateTowardsMouse();
 
-        Movement();
+        Movement2();
     }
 
     private void BrightnessUpdater()
@@ -216,6 +216,40 @@ public class Character : MonoBehaviour {
         {
             speed = defaultSpeed;
             //TODO waste more energy
+        }
+    }
+
+    private void Movement2()
+    {
+        Vector2 targetVelocity = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        GetComponent<Rigidbody2D>().velocity = targetVelocity * speed;
+        walking = true;
+        characterAnim.SetBool("Walking", walking);
+        if (!audioSource.isPlaying)
+        {
+            audioSource.Play();
+            soundPlaying = true;
+        }
+
+        if (!Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.W))
+        {
+            if (soundPlaying == true)
+            {
+                soundPlaying = false;
+                audioSource.Stop();
+            }
+            walking = false;
+            characterAnim.SetBool("Walking", walking);
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            energy -= 0.025f;
+            speed = sprintSpeed;
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            speed = defaultSpeed;
         }
     }
 

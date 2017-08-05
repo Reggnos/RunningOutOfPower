@@ -23,22 +23,22 @@ public class EnemyBehaviour : MonoBehaviour
     private float angle;
     // bool lookAround = false
     public int enemyAngle;
-    private int searchClosest;
     private int currentWP = 0;
     private int randomCurrentWP;
     private int[] currentWParray;
-    private int searchClosestPrevious;
+    private int searchNext;
+    private int searchClosestToEnemy;
     private float goToRandomNumber = 0;
     float waitedTooLong = 0;
 
 
     public bool idle = true;
-    bool goingClosest = false;
     bool findClosest = true;
     public bool isChaser = false;
     bool next = false;
-    bool tryingToFind = false;
     bool wasChasing = false;
+    public bool isRaycast = false;
+    bool nowCheckpoints = false;
     //bool lookAroundRotate = true;
 
 
@@ -46,9 +46,10 @@ public class EnemyBehaviour : MonoBehaviour
 
     private void Start()
     {
+        
         enemyTest = GetComponent<EnemyTest>();
         currentWParray = new int[4];
-        currentWP = SearchClosestWaypoint(waypoints,1000);
+        currentWP = SearchClosestWaypoint(waypoints);
         playerTransform = playerGameObject.transform;
         randomCurrentWP = (int)Mathf.Round(Random.Range(0f, waypoints.Length - 1));
         direction = waypoints[currentWP].transform.position - transform.position;
@@ -56,28 +57,34 @@ public class EnemyBehaviour : MonoBehaviour
 
     void FixedUpdate()
     {
-        
-        Debug.Log(enemyAngle);      
+       
         //start of idle walk
         if (idle == true && waypoints.Length > 0)
         {
             
-            enemyAngle = 180;
+            enemyAngle = 40;
             waitedTooLong += Time.deltaTime;
             
             if (Vector2.Distance(waypoints[currentWP].transform.position, transform.position) < accuracyWP || wasChasing || waitedTooLong > 8)
             {
                 waitedTooLong = 0;
                
-                wasChasing = false;              
+                wasChasing = false;
 
                 currentWParray[0] = SearchClosestWaypoint(waypoints, currentWP);
                 currentWParray[1] = SearchClosestWaypoint(waypoints, currentWP, currentWParray[0]);
-                if (currentWParray[1] != 0) goToRandomNumber++;
-                currentWParray[2] = SearchClosestWaypoint(waypoints, currentWP, currentWParray[0], currentWParray[1]);
-                if (currentWParray[2] != 0) goToRandomNumber++;
-                currentWParray[3] = SearchClosestWaypoint(waypoints, currentWP, currentWParray[0], currentWParray[1], currentWParray[2]);
-                if (currentWParray[3] != 0) goToRandomNumber++;
+                if (currentWParray[1] != 0)
+                {
+                    goToRandomNumber++;
+                    currentWParray[2] = SearchClosestWaypoint(waypoints, currentWP, currentWParray[0], currentWParray[1]);
+                    if (currentWParray[2] != 0)
+                    {
+                        goToRandomNumber++;
+                        currentWParray[3] = SearchClosestWaypoint(waypoints, currentWP, currentWParray[0], currentWParray[1], currentWParray[2]);
+                        if (currentWParray[3] != 0)
+                            goToRandomNumber++;
+                    }
+                }
 
 
                 randomCurrentWP = (int)Mathf.Round(Random.Range(0f, goToRandomNumber));
@@ -101,56 +108,53 @@ public class EnemyBehaviour : MonoBehaviour
         if (!isChaser)
         {
             direction = playerGameObject.transform.position - transform.position;
-            rotSpeed = 20;
+            rotSpeed = 25;
             
         }
         else
         {
+            enemyAngle = 180;
             rotSpeed = 0;
         }
 
         dist = Vector3.Distance(transform.position, playerGameObject.transform.position);
         angle = Vector2.Angle(playerTransform.position - transform.position, head.up);
-      
 
-        if (Vector3.Distance(playerTransform.position, transform.position) < 10 && ((angle < enemyAngle) || enemyTest.hit)  && Physics2D.Raycast(transform.position, direction, dist).collider == null )
+        if (dist < 10 && Physics2D.Raycast(transform.position, direction, dist).collider == null)
+            isRaycast = true;
+        else
+            isRaycast = false;
+
+
+        if (dist < 12 && ((angle < enemyAngle) || enemyTest.hit) && isRaycast)
         {
             
             idle = false;
             
-            KeepChasing(speedChase);
+            KeepChasing(false);
             lastPosition = playerTransform.position;
-            tryingToFind = true;
-            direction = lastPosition - transform.position;
-
         }
-        else if (idle == false)
+        else if (idle == false) //behind wall or character ran too far
         {
-            if(Physics2D.Raycast(transform.position, direction, dist).collider == null)
-            {
-                if (Vector2.Distance(lastPosition, transform.position) > 4)
+            
+            if (Vector2.Distance(lastPosition, transform.position) > 2 && !nowCheckpoints)
                 {
                     direction = lastPosition - transform.position;
-                    dist = Vector3.Distance(transform.position, lastPosition);
-                    KeepChasing(speedChase);
+                    KeepChasing(false);
+                
                 }
-                else
+                else if(isRaycast)
                 {
                     Invoke("Move", 2);
-                }
-
-            }
-            else if(tryingToFind)
-            {
-                KeepChasing(speedChase);
-            }
-            else
-            {
-                Invoke("Move", 2);
-            }
-                     
-            
-
+                   
+                 }
+                else
+                {
+                
+                nowCheckpoints = true;
+                  KeepChasing(true);
+                } 
+                
         }
         
     }
@@ -161,54 +165,64 @@ public class EnemyBehaviour : MonoBehaviour
         idle = true;
     }
 
-    private void KeepChasing(float speed)
+    private void KeepChasing(bool chasingPlayerBehindWall)
     {
-        if (Physics2D.Raycast(transform.position, direction, dist).collider == null && !goingClosest)
+        
+        if (!chasingPlayerBehindWall)
         {           
             RotateAndMove(speedChase);            
         }
         else 
-        {
+        {            
             
-            goingClosest = true;
             if (findClosest)
             {
-                searchClosestPrevious = SearchClosestChasepoint(chasepoints);
+                searchClosestToEnemy = SearchClosestChasepoint(chasepoints);
+                if (searchClosestToEnemy == 1000)
+                {
+                    idle = true;
+                    return;
+                    
+                }
+
+                Debug.Log(searchClosestToEnemy);
                 findClosest = false;
                 
-                if(searchClosestPrevious % 2 == 0)
+                if(searchClosestToEnemy % 2 == 0)
                 {
-                    searchClosest = searchClosestPrevious - 1;
+                    searchNext = searchClosestToEnemy + 1;
+                    Debug.Log(searchNext);
                 }
                 else
                 {
-                    searchClosest = searchClosestPrevious + 1;
+                    searchNext = searchClosestToEnemy - 1;
+                    Debug.Log(searchNext);
                 }
             }   
 
             if(!next)
             {
-                direction = chasepoints[searchClosestPrevious].transform.position - transform.position;
-                RotateAndMove(speedIdle);
+                direction = chasepoints[searchClosestToEnemy].transform.position - transform.position;
+                
             }
             else
             {
-                direction = chasepoints[searchClosest].transform.position - transform.position;
-                RotateAndMove(speedIdle);
+                direction = chasepoints[searchNext].transform.position - transform.position;              
             }
-                    
-            if (Vector2.Distance(chasepoints[searchClosestPrevious].transform.position, transform.position) < accuracyWP && !next)
+
+            RotateAndMove(speedIdle);
+
+            if (Vector2.Distance(chasepoints[searchClosestToEnemy].transform.position, transform.position) < accuracyWP && !next)
             {              
                 next = true;               
             }
-            else if(Vector2.Distance(chasepoints[searchClosest].transform.position, transform.position) < accuracyWP && next)
+            else if(Vector2.Distance(chasepoints[searchNext].transform.position, transform.position) < accuracyWP && next)
             {
                 next = false;
-                goingClosest = false;
                 findClosest = true;
                 idle = true;
-                tryingToFind = false;
                 wasChasing = true;
+                nowCheckpoints = false;
             }
             
 
@@ -227,24 +241,25 @@ public class EnemyBehaviour : MonoBehaviour
 
     private int SearchClosestChasepoint(GameObject[] chasepoints)
     {
+       
         float closestDistance = Mathf.Infinity;
-        int l = chasepoints.Length, closestWay = 0;
-        Vector2 fromCharacterToWaypoint;
+        int l = chasepoints.Length, closestWay = 1000;
+        Vector2 fromEnemyToWaypoint;
+
         for (int i = 0; i < l; i++)
         {           
-              dist = Vector3.Distance(playerGameObject.transform.position, chasepoints[i].transform.position);
-              fromCharacterToWaypoint = chasepoints[i].transform.position - playerGameObject.transform.position;
+              dist = Vector2.Distance(transform.position, chasepoints[i].transform.position);
+              fromEnemyToWaypoint = chasepoints[i].transform.position - transform.position;
+                
 
-              if (dist < closestDistance && Physics2D.Raycast(transform.position, fromCharacterToWaypoint, dist).collider == null)
+              if (dist < closestDistance && Physics2D.Raycast(transform.position, fromEnemyToWaypoint, dist).collider == null)
               {
                     closestDistance = dist;
                     closestWay = i;
               }            
         }
-        if (closestWay != 0)
             return closestWay;
-        else
-            return 1;
+       
     }
 
     private int SearchClosestWaypoint(GameObject[] waypoints)

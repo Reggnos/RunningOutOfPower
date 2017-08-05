@@ -278,7 +278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5f4a6d412d248d4191c543c721475ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletSpeed: 10
+  bulletSpeed: 17
   character: {fileID: 1728334434016120, guid: d9a2a2b6cae32734a9f3e8a207f5feb9, type: 2}
   shot: {fileID: 8300000, guid: 93cdc15879b570b419a0b944830d5940, type: 3}
   energyLoss: {fileID: 8300000, guid: 427ce4748fb412848a2cee1265f67342, type: 3}

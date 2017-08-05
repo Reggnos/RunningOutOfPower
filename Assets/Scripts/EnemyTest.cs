@@ -17,7 +17,7 @@ public class EnemyTest : MonoBehaviour
         spawnEnemy = obj.GetComponent<SpawnEnemy>();
         if (enemyType == "Charger")
         {
-            if (spawnEnemy.Wave < 3)
+            if (spawnEnemy.Wave <= 3)
             {
                 health = 10;
             }
@@ -28,7 +28,7 @@ public class EnemyTest : MonoBehaviour
         }
         else if (enemyType == "Chaser")
         {
-            if (spawnEnemy.Wave < 3)
+            if (spawnEnemy.Wave <= 3)
             {
                 health = 2;
             }
@@ -39,7 +39,7 @@ public class EnemyTest : MonoBehaviour
         }
         else if (enemyType == "Chaser2")
         {
-            if (spawnEnemy.Wave < 3)
+            if (spawnEnemy.Wave <= 3)
             {
                 health = 2;
             }
@@ -50,7 +50,7 @@ public class EnemyTest : MonoBehaviour
         }
         else if (enemyType == "Shooter")
         {
-            if (spawnEnemy.Wave < 3)
+            if (spawnEnemy.Wave <= 3)
             {
                 health = 5;
             }
