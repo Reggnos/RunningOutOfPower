@@ -13,6 +13,11 @@ public class GameController : MonoBehaviour {
     private GameObject selectedStation;
     private ChargingStation chargingScript;
 
+    //Upgrades
+    public bool cannonUpgrade = false;
+    public bool rapidFireUpgrade = false;
+
+
 	// Use this for initialization
 	void Start ()
     {

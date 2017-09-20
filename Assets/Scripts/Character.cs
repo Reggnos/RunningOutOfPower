@@ -13,12 +13,16 @@ public class Character : MonoBehaviour {
     public float bulletSpeed = 5000;
     public GameObject gun;
     public GameObject[] bullet;
+    public GameObject[] bulletCannon;
+    public GameObject[] bulletRapid;
     public GameObject ambientLight;
+    public GameObject tutorial;
+    public GameObject gameControllerObj;
     public Text energyTextObject;
     public static int healingBar;
     public float bulletCost = 1;
     public static float passiveEnergyLoss = 0.5f;
-    public GameObject tutorial;
+
 
     private int forceSlow = 1;
     private Vector3 mousePos;
@@ -40,6 +44,7 @@ public class Character : MonoBehaviour {
     private GameObject obj;
     private SpawnEnemy spawnEnemy;
     private bool losingEnergy = false;
+    private GameController gameController;
 
 
     void Start ()
@@ -56,6 +61,7 @@ public class Character : MonoBehaviour {
         ambientRenderer = ambientLight.GetComponent<SpriteRenderer>();
         characterAnim = gameObject.GetComponent<Animator>();
         energyText = energyTextObject.GetComponent<Text>();
+        gameController = gameControllerObj.GetComponent<GameController>();
 	}
 
     void Update()
@@ -73,8 +79,9 @@ public class Character : MonoBehaviour {
 
 
         if (energy > 100)
-        energy = 100;
-
+        {
+            energy = 100;
+        }
         if (energy < 0)
         {
             SceneManager.LoadScene("Lose Screen");
@@ -91,18 +98,38 @@ public class Character : MonoBehaviour {
         energyText.text = energy.ToString("f1");
 
         //Shoot
-        if (Input.GetMouseButtonDown(0) && canShoot == true && energy >1)
+        if (gameController.rapidFireUpgrade == true)
+        {
+            if (Input.GetMouseButton(0) && canShoot == true && energy > 1)
+            {
+                characterAnim.SetBool("Shooting", true);
+                Shoot();
+                canShoot = false;
+                Invoke("BulletDelay", rateOfFire);
+                energy -= bulletCost;
+            }
+        }
+        else
+        if (Input.GetMouseButtonDown(0) && canShoot == true && energy > 1)
         {
             characterAnim.SetBool("Shooting", true);
             Shoot();
             canShoot = false;
             Invoke("BulletDelay", rateOfFire);
-            energy--;
+            energy -= bulletCost;
         }
 
         RotateTowardsMouse();
 
         Movement2();
+
+        //Test
+        if (Input.GetKeyDown("backspace"))
+        {
+            gameController.rapidFireUpgrade = true;
+            rateOfFire = 0.1f;
+            bulletCost = 0.5f;
+        }
     }
 
     private void BrightnessUpdater()
@@ -127,15 +154,42 @@ public class Character : MonoBehaviour {
 
     private void Shoot()
     {
-        if (energy >=75)
-        bulletInstance = Instantiate(bullet[0]);
-        else if (energy >= 50 && energy < 75)
-        bulletInstance = Instantiate(bullet[1]);
-        else if (energy >= 25 && energy < 50)
-        bulletInstance = Instantiate(bullet[2]);
-        else if (energy < 25)
-        bulletInstance = Instantiate(bullet[3]);
-        bulletInstance.transform.position = new Vector2(gun.transform.position.x, gun.transform.position.y);
+        if (gameController.rapidFireUpgrade == true)
+        {
+            if (energy >= 75)
+                bulletInstance = Instantiate(bulletRapid[0]);
+            else if (energy >= 50 && energy < 75)
+                bulletInstance = Instantiate(bulletRapid[1]);
+            else if (energy >= 25 && energy < 50)
+                bulletInstance = Instantiate(bulletRapid[2]);
+            else if (energy < 25)
+                bulletInstance = Instantiate(bulletRapid[3]);
+            bulletInstance.transform.position = new Vector2(gun.transform.position.x, gun.transform.position.y);
+        }
+        else if (gameController.cannonUpgrade == true)
+        {
+            if (energy >= 75)
+                bulletInstance = Instantiate(bulletCannon[0]);
+            else if (energy >= 50 && energy < 75)
+                bulletInstance = Instantiate(bulletCannon[1]);
+            else if (energy >= 25 && energy < 50)
+                bulletInstance = Instantiate(bulletCannon[2]);
+            else if (energy < 25)
+                bulletInstance = Instantiate(bulletCannon[3]);
+            bulletInstance.transform.position = new Vector2(gun.transform.position.x, gun.transform.position.y);
+        }
+        else
+        {
+            if (energy >= 75)
+                bulletInstance = Instantiate(bullet[0]);
+            else if (energy >= 50 && energy < 75)
+                bulletInstance = Instantiate(bullet[1]);
+            else if (energy >= 25 && energy < 50)
+                bulletInstance = Instantiate(bullet[2]);
+            else if (energy < 25)
+                bulletInstance = Instantiate(bullet[3]);
+            bulletInstance.transform.position = new Vector2(gun.transform.position.x, gun.transform.position.y);
+        }
     }
 
     private void Movement()

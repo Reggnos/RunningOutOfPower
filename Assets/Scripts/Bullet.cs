@@ -26,6 +26,9 @@ public class Bullet : MonoBehaviour {
         characterScript = character.GetComponent<Character>();
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = transform.position.z;
+        if (gameObject.tag == "BulletRapid")
+        normalizeDirection = (mousePos - transform.position +  new Vector3(Random.Range(-0.5f,0.5f), Random.Range(-0.5f, 0.5f),0)).normalized;
+        else
         normalizeDirection = (mousePos - transform.position).normalized;
         Invoke("DestroySelf", 2);
     }
@@ -55,8 +58,16 @@ public class Bullet : MonoBehaviour {
     {
         if (collision.gameObject.tag == "Enemy" && Character.healingBar <12)
         {
-            Character.healingBar++;
-            Destroy(gameObject);
+            if (gameObject.tag == "BulletRapid")
+            {
+                Character.healingBar += Random.Range(0, 2);
+                Destroy(gameObject);
+            }
+            else
+            {
+                Character.healingBar++;
+                Destroy(gameObject);
+            }
         }
         else if (collision.gameObject.tag == "Player")
         {

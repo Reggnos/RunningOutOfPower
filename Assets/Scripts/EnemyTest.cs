@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyTest : MonoBehaviour
 {
     public string enemyType;
-    public int health;
+    public float health;
     private Collider2D myCollider;
     public bool hit = false;
     private GameObject obj;
@@ -153,7 +153,19 @@ public class EnemyTest : MonoBehaviour
             health--;
             hit = true;
         }
-        
+
+        if (collision.gameObject.tag == "BulletCannon")
+        {
+            health -= 2;
+            hit = true;
+        }
+
+        if (collision.gameObject.tag == "BulletRapid")
+        {
+            health-= 0.25f;
+            hit = true;
+        }
+
     }
 
 
